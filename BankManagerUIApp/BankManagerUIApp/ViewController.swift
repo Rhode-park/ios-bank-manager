@@ -58,11 +58,47 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private let signalLabelStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 0
+        stackView.distribution = .fill
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    private let waitingListLabel: UILabel = {
+        let label = UILabel()
+        label.text = "대기중"
+        label.textAlignment = .center
+        label.backgroundColor = .systemGreen
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 30)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
+    private let taskingListLabel: UILabel = {
+        let label = UILabel()
+        label.text = "업무중"
+        label.textAlignment = .center
+        label.backgroundColor = .systemIndigo
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 30)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureMainStackView()
         configureButtonStackView()
+        configureSignalLabelStackView()
     }
     
     private func configureMainStackView() {
@@ -77,6 +113,7 @@ class ViewController: UIViewController {
         
         mainStackView.addArrangedSubview(buttonStackView)
         mainStackView.addArrangedSubview(stopWatchLabel)
+        mainStackView.addArrangedSubview(signalLabelStackView)
     }
     
     private func configureButtonStackView() {
@@ -85,6 +122,14 @@ class ViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             addClientButton.widthAnchor.constraint(equalTo: resetButton.widthAnchor)])
+    }
+    
+    private func configureSignalLabelStackView() {
+        signalLabelStackView.addArrangedSubview(waitingListLabel)
+        signalLabelStackView.addArrangedSubview(taskingListLabel)
+        
+        NSLayoutConstraint.activate([
+            waitingListLabel.widthAnchor.constraint(equalTo: taskingListLabel.widthAnchor)])
     }
     
     
