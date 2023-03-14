@@ -17,10 +17,42 @@ class ViewController: UIViewController {
         return stackView
     }()
     
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.spacing = 10
+        stackView.alignment = .center
+        stackView.distribution = .fill
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    private let addClientButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("고객 10명 추가", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
+    private let resetButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("초기화", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
+        button.setTitleColor(.systemRed, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         configureMainStackView()
+        configureButtonStackView()
     }
     
     private func configureMainStackView() {
@@ -32,5 +64,17 @@ class ViewController: UIViewController {
             mainStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        
+        mainStackView.addArrangedSubview(buttonStackView)
     }
+    
+    private func configureButtonStackView() {
+        buttonStackView.addArrangedSubview(addClientButton)
+        buttonStackView.addArrangedSubview(resetButton)
+        
+        NSLayoutConstraint.activate([
+            addClientButton.widthAnchor.constraint(equalTo: resetButton.widthAnchor)])
+    }
+    
+    
 }
