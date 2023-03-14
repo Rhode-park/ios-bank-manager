@@ -48,6 +48,16 @@ class ViewController: UIViewController {
         return button
     }()
     
+    private let stopWatchLabel: UILabel = {
+        let label = UILabel()
+        label.text = "업무시간 - 04:33:253"
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 20)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -66,6 +76,7 @@ class ViewController: UIViewController {
         ])
         
         mainStackView.addArrangedSubview(buttonStackView)
+        mainStackView.addArrangedSubview(stopWatchLabel)
     }
     
     private func configureButtonStackView() {
