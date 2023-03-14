@@ -93,44 +93,94 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private let waitingScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    private let waitingStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.backgroundColor = .brown
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
+    private let taskingScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
+    
+    private let taskingStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.backgroundColor = .lightGray
+        stackView.alignment = .center
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        return stackView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        configureMainStackView()
-        configureButtonStackView()
-        configureSignalLabelStackView()
+        
+        addSubViews()
+        configureViews()
     }
     
-    private func configureMainStackView() {
+    private func addSubViews() {
         view.addSubview(mainStackView)
+        view.addSubview(waitingScrollView)
+        view.addSubview(taskingScrollView)
+        
+        mainStackView.addArrangedSubview(buttonStackView)
+        mainStackView.addArrangedSubview(stopWatchLabel)
+        mainStackView.addArrangedSubview(signalLabelStackView)
+        
+        buttonStackView.addArrangedSubview(addClientButton)
+        buttonStackView.addArrangedSubview(resetButton)
+        
+        signalLabelStackView.addArrangedSubview(waitingListLabel)
+        signalLabelStackView.addArrangedSubview(taskingListLabel)
+        
+        waitingScrollView.addSubview(waitingStackView)
+        taskingScrollView.addSubview(taskingStackView)
+    }
+    
+    private func configureViews() {
         
         NSLayoutConstraint.activate([
             mainStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             mainStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mainStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            mainStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
         
-        mainStackView.addArrangedSubview(buttonStackView)
-        mainStackView.addArrangedSubview(stopWatchLabel)
-        mainStackView.addArrangedSubview(signalLabelStackView)
-    }
-    
-    private func configureButtonStackView() {
-        buttonStackView.addArrangedSubview(addClientButton)
-        buttonStackView.addArrangedSubview(resetButton)
+        NSLayoutConstraint.activate([
+            addClientButton.widthAnchor.constraint(equalTo: resetButton.widthAnchor)
+        ])
         
         NSLayoutConstraint.activate([
-            addClientButton.widthAnchor.constraint(equalTo: resetButton.widthAnchor)])
-    }
-    
-    private func configureSignalLabelStackView() {
-        signalLabelStackView.addArrangedSubview(waitingListLabel)
-        signalLabelStackView.addArrangedSubview(taskingListLabel)
+            waitingListLabel.widthAnchor.constraint(equalTo: taskingListLabel.widthAnchor)
+        ])
         
         NSLayoutConstraint.activate([
-            waitingListLabel.widthAnchor.constraint(equalTo: taskingListLabel.widthAnchor)])
+            waitingScrollView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor),
+            waitingScrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            waitingScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            taskingScrollView.topAnchor.constraint(equalTo: mainStackView.bottomAnchor),
+            taskingScrollView.leadingAnchor.constraint(equalTo: waitingScrollView.trailingAnchor),
+            taskingScrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            taskingScrollView.widthAnchor.constraint(equalTo: waitingScrollView.widthAnchor),
+            taskingScrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            waitingStackView.widthAnchor.constraint(equalTo: waitingScrollView.frameLayoutGuide.widthAnchor),
+            taskingStackView.widthAnchor.constraint(equalTo: taskingScrollView.frameLayoutGuide.widthAnchor)
+        ])
     }
-    
-    
 }
