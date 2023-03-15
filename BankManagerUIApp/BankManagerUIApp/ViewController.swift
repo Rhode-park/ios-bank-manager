@@ -56,6 +56,37 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private let headerStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        
+        return stackView
+    }()
+    
+    private let waitingHeaderLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .systemGreen
+        label.text = "대기중"
+        label.textColor = .white
+        label.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        label.textAlignment = .center
+        
+        return label
+    }()
+    
+    private let workingHeaderLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = .systemIndigo
+        label.text = "업무중"
+        label.textColor = .white
+        label.font = UIFont.preferredFont(forTextStyle: .largeTitle)
+        label.textAlignment = .center
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -69,6 +100,9 @@ class ViewController: UIViewController {
         buttonStackView.addArrangedSubview(addClientButton)
         buttonStackView.addArrangedSubview(resetButton)
         mainStackView.addArrangedSubview(timeCountLabel)
+        mainStackView.addArrangedSubview(headerStackView)
+        headerStackView.addArrangedSubview(waitingHeaderLabel)
+        headerStackView.addArrangedSubview(workingHeaderLabel)
     }
     
     private func configureViews() {
