@@ -18,6 +18,35 @@ class ViewController: UIViewController {
         return stackView
     }()
     
+    private let buttonStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        
+        return stackView
+    }()
+    
+    private lazy var addClientButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("고객 10명 추가", for: .normal)
+        button.setTitleColor(.systemBlue, for: .normal)
+        button.setTitleColor(.systemIndigo, for: .highlighted)
+        button.addTarget(self, action: #selector(touchUpInsideAddClientButton), for: .touchUpInside)
+        
+        return button
+    }()
+    
+    private lazy var resetButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("초기화", for: .normal)
+        button.setTitleColor(.systemRed, for: .normal)
+        button.setTitleColor(.systemBrown, for: .highlighted)
+        button.addTarget(self, action: #selector(touchUpInsideResetButton), for: .touchUpInside)
+        
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -27,6 +56,9 @@ class ViewController: UIViewController {
     
     private func addViews() {
         view.addSubview(mainStackView)
+        mainStackView.addArrangedSubview(buttonStackView)
+        buttonStackView.addArrangedSubview(addClientButton)
+        buttonStackView.addArrangedSubview(resetButton)
     }
     
     private func configureViews() {
@@ -36,6 +68,14 @@ class ViewController: UIViewController {
             mainStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
+    }
+    
+    @objc func touchUpInsideAddClientButton() {
+        print("add버튼 눌림")
+    }
+    
+    @objc func touchUpInsideResetButton() {
+        print("reset버튼 눌림")
     }
 }
 
