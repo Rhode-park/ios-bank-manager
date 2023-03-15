@@ -1,7 +1,7 @@
 //
-//  BankQueue.swift
-//  BankManagerConsoleApp
-//  Created by Rhode, sehong.
+//  Queue.swift
+//  Created by Rhode.
+//  Copyright © yagom academy. All rights reserved.
 //
 
 struct Queue<T> {

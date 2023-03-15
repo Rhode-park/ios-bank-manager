@@ -1,6 +1,6 @@
 //
 //  ClientWaitingLine.swift
-//  Created by Rhode, sehong.
+//  Created by Rhode.
 //  Copyright © yagom academy. All rights reserved.
 //
 
