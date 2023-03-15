@@ -47,6 +47,15 @@ class ViewController: UIViewController {
         return button
     }()
     
+    private let timeCountLabel: UILabel = {
+        let label = UILabel()
+        label.text = "업무시간 - 04:33:253"
+        label.font = UIFont.preferredFont(forTextStyle: .title1)
+        label.textAlignment = .center
+        
+        return label
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -59,6 +68,7 @@ class ViewController: UIViewController {
         mainStackView.addArrangedSubview(buttonStackView)
         buttonStackView.addArrangedSubview(addClientButton)
         buttonStackView.addArrangedSubview(resetButton)
+        mainStackView.addArrangedSubview(timeCountLabel)
     }
     
     private func configureViews() {
