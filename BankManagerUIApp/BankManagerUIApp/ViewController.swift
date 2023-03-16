@@ -12,7 +12,7 @@ class ViewController: UIViewController {
         stackView.axis = .vertical
         stackView.alignment = .fill
         stackView.distribution = .fill
-        stackView.spacing = 20
+        stackView.spacing = 10
         stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
@@ -87,6 +87,47 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private let clientLineStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .horizontal
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        
+        return stackView
+    }()
+    
+    private let waitingLineScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        
+        return scrollView
+    }()
+    
+    private let workingLineScrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        
+        return scrollView
+    }()
+    
+    private let waitingLineStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        
+        return stackView
+    }()
+    
+    private let workingLineStackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        stackView.spacing = 10
+        
+        return stackView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -103,6 +144,11 @@ class ViewController: UIViewController {
         mainStackView.addArrangedSubview(headerStackView)
         headerStackView.addArrangedSubview(waitingHeaderLabel)
         headerStackView.addArrangedSubview(workingHeaderLabel)
+        mainStackView.addArrangedSubview(clientLineStackView)
+        clientLineStackView.addArrangedSubview(waitingLineScrollView)
+        clientLineStackView.addArrangedSubview(workingLineScrollView)
+        waitingLineScrollView.addSubview(waitingLineStackView)
+        workingLineScrollView.addSubview(workingLineStackView)
     }
     
     private func configureViews() {
@@ -111,6 +157,18 @@ class ViewController: UIViewController {
             mainStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             mainStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             mainStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            waitingLineStackView.topAnchor.constraint(equalTo: waitingLineScrollView.contentLayoutGuide.topAnchor),
+            waitingLineStackView.leadingAnchor.constraint(equalTo: waitingLineScrollView.contentLayoutGuide.leadingAnchor),
+            waitingLineStackView.trailingAnchor.constraint(equalTo: waitingLineScrollView.contentLayoutGuide.trailingAnchor),
+            waitingLineStackView.bottomAnchor.constraint(equalTo: waitingLineScrollView.contentLayoutGuide.bottomAnchor),
+            waitingLineStackView.leadingAnchor.constraint(equalTo: waitingLineScrollView.frameLayoutGuide.leadingAnchor),
+            waitingLineStackView.trailingAnchor.constraint(equalTo: waitingLineScrollView.frameLayoutGuide.trailingAnchor),
+            workingLineStackView.topAnchor.constraint(equalTo: workingLineScrollView.contentLayoutGuide.topAnchor),
+            workingLineStackView.leadingAnchor.constraint(equalTo: workingLineScrollView.contentLayoutGuide.leadingAnchor),
+            workingLineStackView.trailingAnchor.constraint(equalTo: workingLineScrollView.contentLayoutGuide.trailingAnchor),
+            workingLineStackView.bottomAnchor.constraint(equalTo: workingLineScrollView.contentLayoutGuide.bottomAnchor),
+            workingLineStackView.leadingAnchor.constraint(equalTo: workingLineScrollView.frameLayoutGuide.leadingAnchor),
+            workingLineStackView.trailingAnchor.constraint(equalTo: workingLineScrollView.frameLayoutGuide.trailingAnchor),
         ])
     }
     
