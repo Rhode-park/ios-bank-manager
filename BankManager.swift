@@ -7,7 +7,9 @@
 import Foundation
 
 struct BankManager {
-    private let clientWaitingLine = ClientWaitingLine()
+    let clientWaitingLine = ClientWaitingLine()
+    var clientWaitingLineQueue = Queue<Client>()
+    
     private let depositSemaphore = DispatchSemaphore(value: 2)
     private let depositQueue = DispatchQueue(label: "loan", attributes: .concurrent)
     private let loanQueue = DispatchQueue(label: "deposit")
@@ -22,10 +24,9 @@ struct BankManager {
     
     private mutating func distributeClient() {
         let group = DispatchGroup()
-        var clientQueue = clientWaitingLine.manageClientQueue()
         let banker = Banker()
         
-        while let client = clientQueue.dequeue() {
+        while let client = clientWaitingLineQueue.dequeue() {
             switch client.banking {
             case .deposit:
                 depositQueue.async(group: group) { [self] in

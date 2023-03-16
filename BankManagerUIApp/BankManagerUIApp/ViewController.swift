@@ -7,6 +7,8 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var bankManager = BankManager()
+    
     private let mainStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
@@ -96,17 +98,9 @@ class ViewController: UIViewController {
         return stackView
     }()
     
-    private let waitingLineScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        
-        return scrollView
-    }()
+    private let waitingLineScrollView = UIScrollView()
     
-    private let workingLineScrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        
-        return scrollView
-    }()
+    private let workingLineScrollView = UIScrollView()
     
     private let waitingLineStackView: UIStackView = {
         let stackView = UIStackView()
@@ -114,6 +108,7 @@ class ViewController: UIViewController {
         stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
     }()
@@ -124,6 +119,7 @@ class ViewController: UIViewController {
         stackView.alignment = .fill
         stackView.distribution = .fill
         stackView.spacing = 10
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         
         return stackView
     }()
@@ -173,7 +169,14 @@ class ViewController: UIViewController {
     }
     
     @objc func touchUpInsideAddClientButton() {
-        print("add버튼 눌림")
+        var clientQueue = bankManager.clientWaitingLine.manageClientQueue()
+        
+        while let client = clientQueue.dequeue() {
+            let label = CustomUILabel(client: client)
+            waitingLineStackView.addArrangedSubview(label)
+            bankManager.clientWaitingLineQueue.enqueue(client)
+        }
+        view.layoutIfNeeded()
     }
     
     @objc func touchUpInsideResetButton() {

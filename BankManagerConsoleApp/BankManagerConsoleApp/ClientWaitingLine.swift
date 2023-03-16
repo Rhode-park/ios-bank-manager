@@ -9,9 +9,8 @@ class ClientWaitingLine {
     
     func manageClientQueue() -> Queue<Client>  {
         var clientQueue = Queue<Client>()
-        clientCount = Int.random(in: 10...30)
         
-        for i in 1...clientCount {
+        for i in 1...10 {
             Client.Banking.allCases.randomElement().map {
                 clientQueue.enqueue(Client(clientWaitingNumber: i, banking: $0))
             }
