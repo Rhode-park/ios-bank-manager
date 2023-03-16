@@ -180,7 +180,9 @@ class ViewController: UIViewController {
     }
     
     @objc func touchUpInsideResetButton() {
-        print("reset버튼 눌림")
+        waitingLineStackView.arrangedSubviews.forEach { label in
+            label.removeFromSuperview()
+        }
     }
 }
 
