@@ -17,7 +17,7 @@
 <br/>
 
 ## 2. 팀원
-
+[팀 회고](https://github.com/Rhode-park/ios-bank-manager/blob/step3/%ED%8C%80%20%ED%9A%8C%EA%B3%A0.md)
 |⭐️Rhode| ⭐️Sehong |
 | :--------: | :-------: |
 |<img height="210px" src="https://i.imgur.com/XyDwGwe.jpg">| <img height="210px" src="https://i.imgur.com/64dvDJl.jpg"> |
