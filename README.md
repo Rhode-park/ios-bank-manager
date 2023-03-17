@@ -12,8 +12,7 @@
 <br/>
 
 ## 1. 소개
- 은행에서 1명의 은행원이 10-30명 사이의 고객의 업무를 1:1로 처리해주는 콘솔앱 
-
+ 은행에서 1명의 은행원이 10-30명 사이의 고객의 업무를 1:1로 처리해주는 콘솔앱입니다. 은행원은 두 명의 예금 담당 은행원과 한 명의 대출 담당 은행원이 존재합니다. 고객을 생성할 때 고객이 볼 업무의 종류가 정해지며, 그에 따라서 은행원들이 예금과 대출 업무를 처리하는 방식입니다.
 
 <br/>
 
@@ -24,13 +23,11 @@
 |<img height="210px" src="https://i.imgur.com/XyDwGwe.jpg">| <img height="210px" src="https://i.imgur.com/64dvDJl.jpg"> |
 | Navigator / Driver | Navigator / Driver |
 
-
-
 </br>
 
 ## 3. 타임라인
 ### 프로젝트 진행 기간
-**23.03.06 (월) ~ 23.03.10 (금)** 
+**23.03.06 (월) ~ 23.03.17 (금)** 
 
 |날짜|스텝| 타임라인 |
 | :-------: | :-------: | ------- |
@@ -39,7 +36,11 @@
 |03.08 (수) | STEP2 | Bank, Client, BankManager 구현 |
 |03.09 (목) | STEP2 | - |
 |03.10 (금) | STEP2 | Bank, Client, BankManager 리팩토링 |
-
+|03.13 (월) | STEP3 | Bank, Client, BankManager 리팩토링 및 clientWaitingLine 클래스 구현 |
+|03.14 (화) | STEP3 | Bank 리팩토링 |
+|03.15 (수) | STEP2 | - |
+|03.16 (목) | STEP2 | - |
+|03.17 (금) | STEP2 | - |
 
 <br/>
 
@@ -50,6 +51,7 @@
 BankManagerConsoleApp
 │   ├── Bank.swift
 │   ├── Client.swift
+│   ├── ClientWaitingLine.swift
 │   ├── Queue
 │   │   ├── LinkedList.swift
 │   │   ├── Node.swift
@@ -62,20 +64,22 @@ BankManagerConsoleApp
 
 ### 클래스 다이어그램
 
-<img height="600px" src="https://i.imgur.com/v8Tti2j.png">
-
+![](https://i.imgur.com/UwatlYH.png)
 
 <br/>
 
 ## 5. 실행 화면(기능 설명)
-![](https://i.imgur.com/Lw62WWD.gif)
 
+| Invalid Input | Input 1 | Input 2 |
+| :--------: | :--------: | :--------: |
+| ![](https://i.imgur.com/3bERhPM.gif) | ![](https://i.imgur.com/gvtOjTE.gif) | ![](https://i.imgur.com/r0D61ll.gif) |
+| 1, 2 외의 것을 입력하게 되면 '입력이 잘못되었습니다.' 라는 문구와 함께 다시 입력창이 나타납니다. | 1을 입력하면 10부터 30까지 중 랜덤한 숫자의 고객들이 들어오고 비동기적으로 그들의 업무를 처리하게 됩니다. 업무가 마감될 때 총 처리한 고객의 수와 처리에 걸린 시간이 나타납니다. | 2를 입력하면 프로그램이 종료됩니다. |
 
 </br>
 
 ## 6. 트러블 슈팅
 
-### 2. DispatchQueue.global().async가 실행되지 않았던 문제
+### 1. DispatchQueue.global().async가 실행되지 않았던 문제
 
 현재의 코드는 다음과 같습니다:
 
@@ -110,10 +114,6 @@ private mutating func distributeClient(bankManagerCount: Int) {
 
 
 
-
-
-
-
 ### 2. 함수 실행 시간을 계산하는 workTime 메서드 구현
 
 
@@ -123,26 +123,72 @@ private mutating func distributeClient(bankManagerCount: Int) {
 
 ```swift
  private func workTime(workTimeFunction: () -> Void) -> TimeInterval {
-        let startTime = Date()
+    let startTime = Date()
         
-        workTimeFunction()
+    workTimeFunction()
         
-        let endTime = Date()
-        let workTime = endTime.timeIntervalSince(startTime)
+    let endTime = Date()
+    let workTime = endTime.timeIntervalSince(startTime)
         
-        return workTime
-    }
+    return workTime
+}
 ```
 
 
+### 3. 3명의 은행원이 동시에 업무를 처리하기 
 
+은행에는 3명의 은행원이 근무하고, 2명은 예금업무를 1명은 대출업무를 처리합니다. 저희는 은행원들이 일을 동시에 할 수 있도록 커스텀큐를 생성해주었습니다. 
+커스텀큐의 기본적인 설정은 Serial이기때문에 대출업무는 attributes를 설정해주지 않았고, 예금업무는 2명이서 동시적으로 업무를 보고 있기때문에 concurrent로 설정하고 semaphore의 value를 2로 설정하여 예금 업무를 담당하는 은행원 2명만이 동시적으로 일을 할 수 있도록 구현하였습니다. 
+```swift
+private let depositSemaphore = DispatchSemaphore(value: 2)
+private let depositQueue = DispatchQueue(label: "loan", attributes: .concurrent)
+    
+private let loanQueue = DispatchQueue(label: "deposit")
+```
 
+```swift
+private mutating func distributeClient() {
+    let group = DispatchGroup()
+    var clientQueue = clientWaitingLine.manageClientQueue()
+    let bankManager = BankManager()
+    
+    while let client = clientQueue.dequeue() {
+        switch client.banking {
+        case .deposit:
+            depositQueue.async(group: group) { [self] in
+                depositSemaphore.wait()
+                    
+                bankManager.work(client: client)
+                depositSemaphore.signal()
+            }
+        case .loan:
+            loanQueue.async(group: group) {
+                bankManager.work(client: client)
+            }
+        }
+    }
+    group.wait()
+}
+```
+
+### 4. BankingType으로 ClientQueue생성하기 
+저희는 처음에 Client를 생성할때 숫자를 랜덤으로 뽑아서 예금고객과 대출고객 번호를 각각 생성해주었습니다. 리뷰어의 조언을 받고 해당 부분은 예금과 대출이라는 banking 타입을 랜덤으로 고객을 생성하는 방식으로 변경해주었습니다.  
+```swift
+func manageClientQueue() -> Queue<Client>  {
+    var clientQueue = Queue<Client>()
+    clientCount = Int.random(in: 10...30)
+        
+    for i in 1...clientCount {
+        Client.Banking.allCases.randomElement().map {
+            clientQueue.enqueue(Client(clientWaitingNumber: i, banking: $0))
+        }
+    }
+        
+    return clientQueue
+}
+```
 
 ## 7. 참고 링크
 
 > - [야곰닷넷 - 동시성프로그래밍](https://yagom.net/courses/%eb%8f%99%ec%8b%9c%ec%84%b1-%ed%94%84%eb%a1%9c%ea%b7%b8%eb%9e%98%eb%b0%8d-concurrency-programming/)
 > - [WWDC 2015 Protocol - Oriented Programming in Swift](https://developer.apple.com/videos/play/wwdc2016/720/)
-
-
-
-
