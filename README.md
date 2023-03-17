@@ -108,6 +108,7 @@ private mutating func distributeClient(bankManagerCount: Int) {
 원래는 코드에 `group.wait()`이 없었습니다. 그래서 `DispatchQueue.global().async(group: group)` 내부 코드가 실행되지 않았습니다. 비동기이기 때문에 업무를 던져주고 결과까지 기다리지 않는다는 것을 간과했었습니다. 그래서 `group.wait()` 코드를 삽입해주었습니다. 그 결과 해당 그룹의 모든 작업이 완료때까지 현재 스레드를 block 시킬 수 있었습니다.
 
 `wait()`의 정의는 다음과 같습니다:
+
 ![](https://i.imgur.com/4Q4xCqb.png)
 
 이와 비슷한 기능으로는 `notify(queue:)`가 있는 것으로 알고 있습니다. `notify(queue:)`는 그룹으로 묶인 모든 작업이 끝났을 때 실행될 작업을 넘겨줍니다.
